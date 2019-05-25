@@ -158,6 +158,7 @@ TEST(XMLWriter, EndElement){
 
 
 }
+
 TEST(XMLWriter, Flushing){
     SXMLEntity Writerow;
     Writerow.DType = SXMLEntity::EType::StartElement;

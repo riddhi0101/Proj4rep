@@ -53,6 +53,7 @@ void CXMLReader::StaticCharacterData (void *data, const XML_Char *s, int len){
     SXMLEntity newEntity;
     newEntity.DNameData = std::string(s,len);
     newEntity.DType = SXMLEntity::EType::CharData;
+    std::cout<<"in call back charcdata"<<std::endl;
     Ptr->BufferEntities.push(newEntity);
 
 }
@@ -79,15 +80,15 @@ bool CXMLReader::ReadEntity(SXMLEntity &entity, bool skipcdata) {
         std::cout<<"\""<<std::endl;
         XML_Parse(DExpatParser,buffer, Input.gcount(),Input.eof());
         std::cout<<"after parser"<<std::endl;
-        if (skipcdata) {
-            std::cout<<"skiping"<<std::endl;
-            //std::cout<<std::boolalpha << (BufferEntities.front().DType == SXMLEntity::EType::CharData) <<std::endl;
-            while (!BufferEntities.empty() and (BufferEntities.front().DType == SXMLEntity::EType::CharData)) {
-                std::cout<<"popping"<<std::endl;
-                BufferEntities.pop();
-            }
-        }
 
+    }
+    if (skipcdata) {
+        std::cout<<"skiping"<<std::endl;
+        //std::cout<<std::boolalpha << (BufferEntities.front().DType == SXMLEntity::EType::CharData) <<std::endl;
+        while (!BufferEntities.empty() and (BufferEntities.front().DType == SXMLEntity::EType::CharData)) {
+            std::cout<<"popping"<<std::endl;
+            BufferEntities.pop();
+        }
     }
 
     if (BufferEntities.empty()){

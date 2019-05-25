@@ -133,8 +133,8 @@ TEST(CSVReader, Filereader_CSV){
     std::ofstream Readfile1("ABC_114_2.csv");
     Readfile1<< "\"SEAT\",\"SID\",\"SURNAME\",\"PREFNAME\",\"LEVEL\",\"UNITS\",\"CLASS\",\"MAJOR\",\"GRADE\",\"STATUS\",\"EMAIL\"\n"
                 "\"1\",\"900667130\",\"Stein\",\"Ava\",\"UG\",\"2\",\"FR\",\"DEF2\",\"I\",\"RE\",\"ava.s.stein@fakeu.edu\"\n"<<std::endl;
-    std::istream Readfile("ABC_114_2.csv");
-    CCSVReader Reader("ABC_114_2.csv");
+    std::ifstream Readfile("ABC_114_2.csv");
+    CCSVReader Reader(Readfile);
     std::vector<std::string> Row;
     EXPECT_TRUE(Reader.ReadRow(Row));
     EXPECT_EQ(Row.size(),11);
@@ -157,7 +157,7 @@ TEST(CSVReader, Filereader_CSV){
     EXPECT_EQ(row[1], "900667130");
     EXPECT_EQ(row[2], "Stein");
     EXPECT_EQ(row[3], "Ava");
-    EXPECT_EQ(row[4], "UGL");
+    EXPECT_EQ(row[4], "UG");
     EXPECT_EQ(row[5], "2");
     EXPECT_EQ(row[6], "FR");
     EXPECT_EQ(row[7], "DEF2");
