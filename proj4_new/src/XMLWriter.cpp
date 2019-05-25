@@ -18,6 +18,12 @@ CXMLWriter::~CXMLWriter() {
 
 }
 bool CXMLWriter::Flush() {
+    while (!flushstack.empty()){
+        std::string name = flushstack.top();
+        flushstack.pop();
+        Output<< "</" + name + ">"<<std::endl;
+    }
+
 
 }
 
@@ -26,6 +32,7 @@ bool CXMLWriter::WriteEntity(const SXMLEntity &entity) {
     outputform = entity.DAttributes;
 
     if (entity.DType == SXMLEntity::EType::StartElement){
+        flushstack.push(entity.DNameData);
         /*for (int i =0; i<entity.DAttributes.length(); i++ ){
             outputform.push_back(entity.DAttributes[1])
         }*/
@@ -41,7 +48,7 @@ bool CXMLWriter::WriteEntity(const SXMLEntity &entity) {
             std::get<1>(outputform[i]) = StringUtils::Replace(std::get<1>(outputform[i]), "<", "&lt");
             std::get<1>(outputform[i]) = StringUtils::Replace(std::get<1>(outputform[i]), ">", "&gt");
         }
-        Output<< "< " + entity.DNameData;
+        Output<< "<" + entity.DNameData;
         for (auto ch: outputform){
             Output <<" " + std::get<0>(ch) + "=" + "\"" + std::get<1>(ch) + "\"";
         }
@@ -62,18 +69,21 @@ bool CXMLWriter::WriteEntity(const SXMLEntity &entity) {
             std::get<1>(outputform[i]) = StringUtils::Replace(std::get<1>(outputform[i]), ">", "&gt");
 
         }
-        Output<< "< " + entity.DNameData;
+        Output<< "<" + entity.DNameData;
         for (auto ch: outputform){
-            Output << std::get<0>(ch) + "=" + "\"" + std::get<1>(ch) + "\" ";//extraspace okay?
+            Output << " " + std::get<0>(ch) + "=" + "\"" + std::get<1>(ch) + "\"";//extraspace okay?
         }
-        Output<<"\\>"<<std::endl;
+        Output<<"/>"<<std::endl;
 
     }
-    else if (entity.DType == SXMLEntity::EType::CharData){
+    else if(entity.DType == SXMLEntity::EType::CharData){
         Output << "\"" + entity.DNameData + "\"" << std::endl;
 
     }
     else{
+        if (!flushstack.empty()){
+            flushstack.pop();
+        }
         Output<< "</" + entity.DNameData + ">"<<std::endl;
     }
 

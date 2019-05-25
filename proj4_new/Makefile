@@ -21,14 +21,17 @@ XML_READER_OBJ = $(OBJDIR)/XMLReader.o
 CSV_TEST_OBJ = $(OBJDIR)/testcsv.o
 XML_TEST_OBJ = $(OBJDIR)/testxml.o
 STRING_UTILS_OBJ = $(OBJDIR)/StringUtils.o
+MAIN_OBJ = $(BINDIR)/main.o
+
 
 CSV_TEST_NAME = testcsv
 XML_TEST_NAME = testxml
 
 
+all: $(LIBDIR)/$(LIBCSV_NAME) directories runtest runtestxml mainrun
 
-all: $(LIBDIR)/$(LIBCSV_NAME) directories runtest runtestxml
-
+mainrun: $(MAIN_OBJ)
+	$(MAIN_OBJ)
 runtest: $(TESTBIN)/$(CSV_TEST_NAME)
 	$(TESTBIN)/$(CSV_TEST_NAME)
 
@@ -48,9 +51,11 @@ $(CSV_WRITER_OBJ): $(SRCDIR)/CSVWriter.cpp $(INCLUDEDIR)/CSVWriter.h $(INCLUDEDI
 $(XML_READER_OBJ): $(SRCDIR)/XMLReader.cpp $(INCLUDEDIR)/XMLReader.h $(INCLUDEDIR)/XMLEntity.h $(INCLUDEDIR)/StringUtils.h $(SRCDIR)/StringUtils.cpp 
 	$(CXX) $(SRCDIR)/XMLReader.cpp -c $(CXXFLAGS) -o $(XML_READER_OBJ)
 
-$(XML_WRITER_OBJ): $(SRCDIR)/XMLWriter.cpp $(INCLUDEDIR)/XMLWriter.h $(INCLUDEDIR)/XMLEntity.h $(INCLUDEDIR)/StringUtils.h $(SRCDIR)/StringUtils.cpp 
+$(XML_WRITER_OBJ): $(SRCDIR)/XMLWriter.cpp $(INCLUDEDIR)/XMLWriter.h $(INCLUDEDIR)/XMLEntity.h $(INCLUDEDIR)/StringUtils.h $(SRCDIR)/StringUtils.cpp
 	$(CXX) $(SRCDIR)/XMLWriter.cpp -c $(CXXFLAGS) -o $(XML_WRITER_OBJ)
 
+$(MAIN_OBJ): $(SRCDIR)/main.cpp $(XML_READER_OBJ) $(XML_WRITER_OBJ) $(XML_TEST_OBJ) $(CSV_READER_OBJ) $(STRING_UTILS_OBJ) $(CSV_WRITER_OBJ) $(CSV_TEST_OBJ) $(LIBDIR)/$(LIBCSV_NAME)
+	$(CXX) $(SRCDIR)/main.cpp $(XML_READER_OBJ) $(XML_WRITER_OBJ) $(XML_TEST_OBJ) $(CSV_READER_OBJ) $(STRING_UTILS_OBJ) $(CSV_WRITER_OBJ) $(CSV_TEST_OBJ) $(LIBDIR)/$(LIBCSV_NAME) $(CXXFLAGS) $(TESTLDFLAGS) -o $(MAIN_OBJ)
 
 
 $(CSV_TEST_OBJ): $(SRCDIR)/testcsv.cpp $(INCLUDEDIR)/CSVReader.h $(INCLUDEDIR)/CSVWriter.h $(INCLUDEDIR)/StringUtils.h

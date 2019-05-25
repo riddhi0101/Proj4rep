@@ -13,6 +13,7 @@
 class CXMLWriter{
     private:
         std::ostream &Output;
+        std::stack <std::string> flushstack;
 
     public:
         CXMLWriter(std::ostream &os);

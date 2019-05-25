@@ -42,14 +42,18 @@ bool CCSVReader::ReadRow(std::vector<std::string> &row) {
         Input.read(buffer, 128);
         csv_parse(&Parser,buffer, Input.gcount(), CallBackFeild, CallBackRow, this);
         count++;
-        //if (Input.eof()){
-            //csv_fini(&Parser,buffer, Input.gcount(), CallBackFeild, CallBackRow, this);
-        //}
+        if (Input.eof()){
+            csv_fini(&Parser, CallBackFeild,CallBackRow,this);
+        }
+
     }
     if (BufferRows.empty()) {
         return false;
     }
     else{
+        /*if (Input.eof()){
+
+        }*/
         row = this->BufferRows.front();
         for (auto ch: row){
             std::cout<<ch<<std::endl;
